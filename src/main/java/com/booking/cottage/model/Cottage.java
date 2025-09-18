@@ -34,6 +34,7 @@ public class Cottage {
     private List<String> images;
     private float stars;
     private int reviews;
+    private short guests;
 
     public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths) {
         this.name = name;
@@ -43,7 +44,7 @@ public class Cottage {
         this.baths = baths;
     }
 
-    public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths, List<String> images, float stars, int reviews) {
+    public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths, List<String> images, float stars, int reviews, short guests) {
         this.name = name;
         this.location = location;
         this.pricePerNight = pricePerNight;
@@ -52,5 +53,6 @@ public class Cottage {
         this.images = images;
         this.stars = stars;
         this.reviews = reviews;
+        this.guests = guests;
     }
 }
