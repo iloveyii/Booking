@@ -2,8 +2,7 @@ package com.booking.cottage.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,6 +10,9 @@ import java.time.LocalDate;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Booking {
 
     @Id
@@ -29,6 +31,10 @@ public class Booking {
     private Customer customer;
 
     public Booking(Cottage cottage, Customer customer, LocalDate startDate, LocalDate endDate) {
+        this.cottage = cottage;
+        this.customer = customer;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 }
 
