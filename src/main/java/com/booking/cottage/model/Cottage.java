@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,5 +23,30 @@ public class Cottage {
     private String name;
     private String location;
     private double pricePerNight;
-}
+    private short bedrooms;
+    private short baths;
+    @ElementCollection
+    @CollectionTable(
+            name = "cottage_images",
+            joinColumns = @JoinColumn(name = "cottage_id")
+    )
+    @Column(name = "image_url")
+    private List<String> images;
 
+    public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths) {
+        this.name = name;
+        this.location = location;
+        this.pricePerNight = pricePerNight;
+        this.bedrooms = bedrooms;
+        this.baths = baths;
+    }
+
+    public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths, List<String> images) {
+        this.name = name;
+        this.location = location;
+        this.pricePerNight = pricePerNight;
+        this.bedrooms = bedrooms;
+        this.baths = baths;
+        this.images = images;
+    }
+}

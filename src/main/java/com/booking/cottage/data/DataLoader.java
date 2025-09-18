@@ -3,6 +3,8 @@ package com.booking.cottage.data;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
+import java.util.List;
+
 import com.booking.cottage.repository.*;
 import com.booking.cottage.model.*;
 
@@ -26,9 +28,30 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Cottage c1 = cottageRepository.save(new Cottage(null, "Lakeside Cottage", "Lake Tahoe", 150.0));
-        Cottage c2 = cottageRepository.save(new Cottage(null, "Forest Cabin", "Yosemite", 120.0));
-        Cottage c3 = cottageRepository.save(new Cottage(null, "Mountain Hut", "Rockies", 200.0));
+        Cottage c1 = cottageRepository.save(
+            Cottage.builder()
+                .name("Lakeside Cottage")
+                .location("Lake Tahoe")
+                .pricePerNight(150.0)
+                .bedrooms((short) 3)
+                .baths((short) 1)
+                .images(List.of(
+                        "cot1.avif",
+                        "cot2.avif"
+                ))
+                .build()
+        );
+
+        Cottage c2 = cottageRepository.save(new Cottage("Forest Cabin", "Yosemite", 120.0, (short) 2, (short) 1, List.of("cot2.avif")));
+        Cottage c3 = cottageRepository.save(new Cottage("Mountain Hut", "Rockies", 200.0, (short) 3, (short) 2, List.of("cot3.avif")));
+
+        Cottage c4 = cottageRepository.save(new Cottage("Seaside Escape", "Vancouver Island, BC", 199.0, (short) 2, (short) 1, List.of("cot4.avif")));
+        Cottage c5 = cottageRepository.save(new Cottage("Wilderness Cabin", "Algonquin Park, Ontario", 169.0, (short) 1, (short) 1, List.of("cot5.avif")));
+        Cottage c6 = cottageRepository.save(new Cottage("Luxury Lake House", "Lake of Bays, Ontario", 349.0, (short) 4, (short) 3, List.of("cot6.avif")));
+
+        Cottage c7 = cottageRepository.save(new Cottage("Riverside Retreat", "Gatineau, Quebec", 159.0, (short) 2, (short) 1, List.of("cot7.avif")));
+        Cottage c8 = cottageRepository.save(new Cottage("Mountain A-Frame", "Canmore, Alberta", 229.0, (short) 3, (short) 2, List.of("cot8.avif")));
+        Cottage c9 = cottageRepository.save(new Cottage("Countryside Cottage", "Prince Edward County, Ontario", 139.0, (short) 2, (short) 1, List.of("cot9.avif")));
 
         // availability ranges (inclusive)
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,1), LocalDate.of(2025,9,30), c1));
@@ -40,16 +63,14 @@ public class DataLoader implements CommandLineRunner {
         customerRepository.save(customer1);
         customerRepository.save(customer2);
 
-        // bookingRepository.save(new Booking(c1, customer1, LocalDate.of(2025,9,1), LocalDate.of(2025,9,30) ));
-
         // Add one booking for Alice
         bookingRepository.save(
-                Booking.builder()
-                        .cottage(c1)
-                        .customer(customer1)
-                        .startDate(LocalDate.of(2025, 9, 5))
-                        .endDate(LocalDate.of(2025, 9, 8))
-                        .build()
+            Booking.builder()
+                .cottage(c1)
+                .customer(customer1)
+                .startDate(LocalDate.of(2025, 9, 5))
+                .endDate(LocalDate.of(2025, 9, 8))
+                .build()
         );
     }
 }
