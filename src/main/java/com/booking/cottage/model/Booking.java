@@ -27,5 +27,8 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    public Booking(Cottage cottage, Customer customer, LocalDate startDate, LocalDate endDate) {
+    }
 }
 
