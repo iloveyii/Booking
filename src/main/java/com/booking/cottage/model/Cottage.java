@@ -32,6 +32,8 @@ public class Cottage {
     )
     @Column(name = "image_url")
     private List<String> images;
+    private float stars;
+    private int reviews;
 
     public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths) {
         this.name = name;
@@ -41,12 +43,14 @@ public class Cottage {
         this.baths = baths;
     }
 
-    public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths, List<String> images) {
+    public Cottage(String name, String location, double pricePerNight, short bedrooms, short baths, List<String> images, float stars, int reviews) {
         this.name = name;
         this.location = location;
         this.pricePerNight = pricePerNight;
         this.bedrooms = bedrooms;
         this.baths = baths;
         this.images = images;
+        this.stars = stars;
+        this.reviews = reviews;
     }
 }

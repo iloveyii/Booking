@@ -35,6 +35,8 @@ public class DataLoader implements CommandLineRunner {
                 .pricePerNight(150.0)
                 .bedrooms((short) 3)
                 .baths((short) 1)
+                .stars(5.0f)
+                .reviews(230)
                 .images(List.of(
                         "cot1.avif",
                         "cot2.avif"
@@ -42,16 +44,16 @@ public class DataLoader implements CommandLineRunner {
                 .build()
         );
 
-        Cottage c2 = cottageRepository.save(new Cottage("Forest Cabin", "Yosemite", 120.0, (short) 2, (short) 1, List.of("cot2.avif")));
-        Cottage c3 = cottageRepository.save(new Cottage("Mountain Hut", "Rockies", 200.0, (short) 3, (short) 2, List.of("cot3.avif")));
+        Cottage c2 = cottageRepository.save(new Cottage("Forest Cabin", "Yosemite", 120.0, (short) 2, (short) 1, List.of("cot2.avif"), 4.5f, 150));
+        Cottage c3 = cottageRepository.save(new Cottage("Mountain Hut", "Rockies", 200.0, (short) 3, (short) 2, List.of("cot3.avif"), 4.0f, 250));
 
-        Cottage c4 = cottageRepository.save(new Cottage("Seaside Escape", "Vancouver Island, BC", 199.0, (short) 2, (short) 1, List.of("cot4.avif")));
-        Cottage c5 = cottageRepository.save(new Cottage("Wilderness Cabin", "Algonquin Park, Ontario", 169.0, (short) 1, (short) 1, List.of("cot5.avif")));
-        Cottage c6 = cottageRepository.save(new Cottage("Luxury Lake House", "Lake of Bays, Ontario", 349.0, (short) 4, (short) 3, List.of("cot6.avif")));
+        Cottage c4 = cottageRepository.save(new Cottage("Seaside Escape", "Vancouver Island, BC", 199.0, (short) 2, (short) 1, List.of("cot4.avif"), 4.5f, 130));
+        Cottage c5 = cottageRepository.save(new Cottage("Wilderness Cabin", "Algonquin Park, Ontario", 169.0, (short) 1, (short) 1, List.of("cot5.avif"), 4.7f, 120));
+        Cottage c6 = cottageRepository.save(new Cottage("Luxury Lake House", "Lake of Bays, Ontario", 349.0, (short) 4, (short) 3, List.of("cot6.avif"), 4.2f, 450));
 
-        Cottage c7 = cottageRepository.save(new Cottage("Riverside Retreat", "Gatineau, Quebec", 159.0, (short) 2, (short) 1, List.of("cot7.avif")));
-        Cottage c8 = cottageRepository.save(new Cottage("Mountain A-Frame", "Canmore, Alberta", 229.0, (short) 3, (short) 2, List.of("cot8.avif")));
-        Cottage c9 = cottageRepository.save(new Cottage("Countryside Cottage", "Prince Edward County, Ontario", 139.0, (short) 2, (short) 1, List.of("cot9.avif")));
+        Cottage c7 = cottageRepository.save(new Cottage("Riverside Retreat", "Gatineau, Quebec", 159.0, (short) 2, (short) 1, List.of("cot7.avif"), 4.9f, 105));
+        Cottage c8 = cottageRepository.save(new Cottage("Mountain A-Frame", "Canmore, Alberta", 229.0, (short) 3, (short) 2, List.of("cot8.avif"), 4.3f, 115));
+        Cottage c9 = cottageRepository.save(new Cottage("Countryside Cottage", "Prince Edward County, Ontario", 139.0, (short) 2, (short) 1, List.of("cot9.avif"), 4.5f, 109));
 
         // availability ranges (inclusive)
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,1), LocalDate.of(2025,9,30), c1));
