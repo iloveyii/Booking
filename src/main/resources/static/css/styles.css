@@ -58,6 +58,7 @@ img.logo {
 .nav-links {
     display: flex;
     list-style: none;
+    margin-bottom: 0 !important;
 }
 
 .nav-links li {

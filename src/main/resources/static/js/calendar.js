@@ -1,7 +1,4 @@
 function getCalendar(availableDates, checkInDate, checkOutDate) {
-
-
-
       // Convert to Date objects
       const availableDateObjects = availableDates.map(date => new Date(date));
 
@@ -28,28 +25,4 @@ function getCalendar(availableDates, checkInDate, checkOutDate) {
           minDate: "today",
           enable: availableDateObjects
       });
-
-      // Handle form submission
-      document.getElementById('bookingForm').addEventListener('submit', function(e) {
-          e.preventDefault();
-
-          const checkIn = document.getElementById('checkInDate').value;
-          const checkOut = document.getElementById('checkOutDate').value;
-          const guests = document.getElementById('guests').value;
-
-          if (!checkIn || !checkOut) {
-              alert('Please select both check-in and check-out dates');
-              return;
-          }
-
-          if (new Date(checkIn) >= new Date(checkOut)) {
-              alert('Check-out date must be after check-in date');
-              return;
-          }
-
-          // In a real application, you would submit the booking here
-          alert(`Booking request received!\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nGuests: ${guests}`);
-      });
-
-
 }

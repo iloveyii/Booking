@@ -73,3 +73,20 @@ function makeRating(value, reviews = 0) {
       ${value.toFixed(1)}${reviews ? ` (${reviews} reviews)` : ""}
   `;
 }
+
+
+function getGuestSelectElement(selected = 2, maxGuests = 6) {
+  const select = document.createElement('select');
+  select.className = 'form-select';
+  select.id = 'guests';
+
+  for (let i = 1; i <= maxGuests; i++) {
+    const option = document.createElement('option');
+    option.value = String(i);
+    option.textContent = i === 1 ? `${i} Guest` : `${i} Guests`;
+    if (i === selected) option.selected = true;
+    select.appendChild(option);
+  }
+
+  return select;
+}
