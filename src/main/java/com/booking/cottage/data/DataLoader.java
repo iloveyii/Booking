@@ -57,8 +57,8 @@ public class DataLoader implements CommandLineRunner {
         Cottage c9 = cottageRepository.save(new Cottage("Countryside Cottage", "Prince Edward County, Ontario", 139.0, (short) 2, (short) 1, List.of("cot9.avif"), 4.5f, 109, (short) 1));
 
         // availability ranges (inclusive)
-        availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,21), LocalDate.of(2025,9,30), c1));
-        availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,5), LocalDate.of(2025,9,25), c2));
+        availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,2), LocalDate.of(2025,10,30), c1));
+        availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,5), LocalDate.of(2025,10,25), c2));
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,10), LocalDate.of(2025,10,30), c3));
 
         Customer customer1 = new Customer(null,"Alice", "alice@example.com", "123456789");
@@ -71,8 +71,8 @@ public class DataLoader implements CommandLineRunner {
             Booking.builder()
                 .cottage(c1)
                 .customer(customer1)
-                .startDate(LocalDate.of(2025, 9, 5))
-                .endDate(LocalDate.of(2025, 9, 8))
+                .startDate(LocalDate.of(2025, 10, 5))
+                .endDate(LocalDate.of(2025, 10, 8))
                 .build()
         );
     }

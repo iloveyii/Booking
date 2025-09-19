@@ -16,4 +16,5 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 
     List<Availability> findByCottageId(Long cottageId);
     List<Availability> findByAvailableStartBetween(LocalDate availableStart, LocalDate availableEnd);
+    List<Availability> findByAvailableStartLessThanEqualAndAvailableEndGreaterThanEqual(LocalDate endOfMonth, LocalDate startOfMonth);
 }

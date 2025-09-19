@@ -114,21 +114,38 @@ public class BookingService {
             current = current.plusDays(1);
         }
 
-        // Count bookings
-        List<Booking> bookings = bookingRepo.findByStartDateBetween(startDate, endDate);
-        bookings.forEach(booking -> {
-            LocalDate date = booking.getStartDate(); // getDate ?
-            overview.get(date).merge("bookings", 1L, Long::sum);
-        });
+        // Bookings: expand each range into days
+        List<Booking> bookings = bookingRepo
+                .findByStartDateLessThanEqualAndEndDateGreaterThanEqual(endDate, startDate);
 
-        // Count availabilities
-        List<Availability> availabilities = availabilityRepo.findByAvailableStartBetween(startDate, endDate);
-        availabilities.forEach(av -> {
-            LocalDate date = av.getAvailableStart();
-            overview.get(date).merge("availabilities", 1L, Long::sum);
-        });
+        for (Booking booking : bookings) {
+            LocalDate bookingStart = booking.getStartDate().isBefore(startDate) ? startDate : booking.getStartDate();
+            LocalDate bookingEnd = booking.getEndDate().isAfter(endDate) ? endDate : booking.getEndDate();
+
+            LocalDate d = bookingStart;
+            while (!d.isAfter(bookingEnd)) {
+                overview.get(d).merge("bookings", 1L, Long::sum);
+                d = d.plusDays(1);
+            }
+        }
+
+        // Availabilities: expand each range into days
+        List<Availability> availabilities = availabilityRepo
+                .findByAvailableStartLessThanEqualAndAvailableEndGreaterThanEqual(endDate, startDate);
+
+        for (Availability av : availabilities) {
+            LocalDate availStart = av.getAvailableStart().isBefore(startDate) ? startDate : av.getAvailableStart();
+            LocalDate availEnd = av.getAvailableEnd().isAfter(endDate) ? endDate : av.getAvailableEnd();
+
+            LocalDate d = availStart;
+            while (!d.isAfter(availEnd)) {
+                overview.get(d).merge("availabilities", 1L, Long::sum);
+                d = d.plusDays(1);
+            }
+        }
 
         return overview;
+
     }
 }
 
