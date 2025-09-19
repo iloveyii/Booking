@@ -92,3 +92,19 @@ function getGuestSelectElement(selected = 2, maxGuests = 6) {
 
   return select;
 }
+
+
+// Add some confetti particles
+function addConfettiParticles(container) {
+    const confettiContainer = document.getElementById(container);
+    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9c74f', '#90be6d'];
+
+    for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confettiContainer.appendChild(confetti);
+    }
+}
