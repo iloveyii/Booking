@@ -6,6 +6,7 @@ function getCalendar(availableDates, checkInDate, checkOutDate) {
       const checkInPicker = flatpickr(checkInDate, {
           minDate: "today",
           enable: availableDateObjects,
+          defaultDate: availableDates[0],
           onChange: function(selectedDates, dateStr, instance) {
               if (selectedDates.length > 0) {
                   // When check-in is selected, update check-out to only allow dates after check-in
@@ -23,6 +24,6 @@ function getCalendar(availableDates, checkInDate, checkOutDate) {
       // Initialize Flatpickr for check-out
       const checkOutPicker = flatpickr(checkOutDate, {
           minDate: "today",
-          enable: availableDateObjects
+          enable: availableDateObjects,
       });
 }
