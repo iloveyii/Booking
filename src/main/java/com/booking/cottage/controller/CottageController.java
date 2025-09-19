@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.booking.cottage.model.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cottages")
@@ -19,6 +20,11 @@ public class CottageController {
     @GetMapping
     public List<Cottage> all() {
         return repo.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Cottage> getOne(@PathVariable Long id) {
+        return repo.findById(id);
     }
 
     @PostMapping
