@@ -1,7 +1,10 @@
 package com.booking.cottage.controller;
 
+import com.booking.cottage.util.Helper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.booking.cottage.repository.*;
 import com.booking.cottage.model.*;
@@ -21,6 +24,16 @@ public class AvailabilityController {
 
     @GetMapping
     public List<Availability> all() { return repo.findAll(); }
+
+    @GetMapping("/{id}")
+    public List<String> getAvailabilities(@PathVariable Long id) {
+        List<Availability> availabilities = repo.findByCottageId(id);
+        List<String> stringList = new ArrayList<>();
+        for(Availability availability: availabilities) {
+            stringList.addAll(Helper.getAvailableDates(availability.getAvailableStart(), availability.getAvailableEnd()));
+        }
+        return stringList;
+    }
 
     @PostMapping
     public ResponseEntity<Availability> create(@RequestBody Availability availability) {

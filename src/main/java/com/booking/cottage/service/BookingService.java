@@ -64,54 +64,36 @@ public class BookingService {
         Booking savedBooking = bookingRepo.save(booking);
 
         // 3) Update availability records
-        updateAvailabilityForBooking(cottage.getId(), req.startDate, req.endDate, covering);
+        updateAvailabilityForBooking(cottage, req.startDate, req.endDate, covering);
 
         return  savedBooking;
     }
 
-    private void updateAvailabilityForBooking(Long cottageId, LocalDate startDate, LocalDate endDate,
+    private void updateAvailabilityForBooking(Cottage cottage, LocalDate startDate, LocalDate endDate,
                                               List<Availability> coveringAvailabilities) {
         for (Availability availability : coveringAvailabilities) {
-            // Case 1: Booking exactly matches availability period
-            if (availability.getAvailableStart().equals(startDate) && availability.getAvailableEnd().equals(endDate)) {
-                availabilityRepo.delete(availability); // Remove the entire availability
+            LocalDate availStart = availability.getAvailableStart();
+            LocalDate availEnd = availability.getAvailableEnd();
+
+            // Delete the original availability
+            availabilityRepo.delete(availability);
+
+            // Create availability before booking (if needed)
+            if (availStart.isBefore(startDate)) {
+                Availability beforeBooking = new Availability();
+                beforeBooking.setCottage(cottage);
+                beforeBooking.setAvailableStart(availStart);
+                beforeBooking.setAvailableEnd(startDate.minusDays(1));
+                availabilityRepo.save(beforeBooking);
             }
-            // Case 2: Booking starts at availability start but ends earlier
-            else if (availability.getAvailableStart().equals(startDate) && endDate.isBefore(availability.getAvailableEnd())) {
-                // Create new availability for the remaining period
-                Availability newAvailability = new Availability();
-                newAvailability.getCottage().setId(cottageId);
-                newAvailability.setAvailableStart(endDate.plusDays(1));
-                newAvailability.setAvailableEnd(availability.getAvailableEnd());
-                availabilityRepo.save(newAvailability);
 
-                availabilityRepo.delete(availability); // Remove the original availability
-            }
-            // Case 3: Booking ends at availability end but starts later
-            else if (availability.getAvailableEnd().equals(endDate) && startDate.isAfter(availability.getAvailableStart())) {
-                // Update current availability to end before booking starts
-                availability.setAvailableEnd(startDate.minusDays(1));
-                availabilityRepo.save(availability);
-            }
-            // Case 4: Booking is in the middle of availability period
-            else if (startDate.isAfter(availability.getAvailableStart()) && endDate.isBefore(availability.getAvailableEnd())) {
-                // Split into two availability periods
-
-                // First part: before booking
-                Availability firstPart = new Availability();
-                firstPart.getCottage().setId(cottageId);
-                firstPart.setAvailableStart(availability.getAvailableStart());
-                firstPart.setAvailableEnd(startDate.minusDays(1));
-                availabilityRepo.save(firstPart);
-
-                // Second part: after booking
-                Availability secondPart = new Availability();
-                secondPart.getCottage().setId(cottageId);
-                secondPart.setAvailableStart(endDate.plusDays(1));
-                secondPart.setAvailableEnd(availability.getAvailableEnd());
-                availabilityRepo.save(secondPart);
-
-                availabilityRepo.delete(availability); // Remove the original availability
+            // Create availability after booking (if needed)
+            if (availEnd.isAfter(endDate)) {
+                Availability afterBooking = new Availability();
+                afterBooking.setCottage(cottage);
+                afterBooking.setAvailableStart(endDate.plusDays(1));
+                afterBooking.setAvailableEnd(availEnd);
+                availabilityRepo.save(afterBooking);
             }
         }
     }

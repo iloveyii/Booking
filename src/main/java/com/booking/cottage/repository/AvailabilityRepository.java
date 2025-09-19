@@ -12,4 +12,7 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
     List<Availability> findCoveringAvailability(@Param("cottageId") Long cottageId,
                                                 @Param("startDate") LocalDate startDate,
                                                 @Param("endDate") LocalDate endDate);
+
+    List<Availability> findByCottageId(Long cottageId); // Same as findAllByCottageId
+
 }
