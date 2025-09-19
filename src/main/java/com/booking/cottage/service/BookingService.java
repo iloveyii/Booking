@@ -22,15 +22,18 @@ public class BookingService {
     private final CottageRepository cottageRepo;
     private final CustomerRepository customerRepo;
     private final AvailabilityRepository availabilityRepo;
+    private final CustomerService customerService;
 
     public BookingService(BookingRepository bookingRepo,
                           CottageRepository cottageRepo,
                           CustomerRepository customerRepo,
-                          AvailabilityRepository availabilityRepo) {
+                          AvailabilityRepository availabilityRepo,
+                          CustomerService customerService) {
         this.bookingRepo = bookingRepo;
         this.cottageRepo = cottageRepo;
         this.customerRepo = customerRepo;
         this.availabilityRepo = availabilityRepo;
+        this.customerService = customerService;
     }
 
     @Transactional
@@ -44,8 +47,7 @@ public class BookingService {
 
         Cottage cottage = cottageRepo.findById(req.cottageId)
                 .orElseThrow(() -> new ApiException("Cottage not found"));
-        Customer customer = customerRepo.findById(req.customerId)
-                .orElseThrow(() -> new ApiException("Customer not found"));
+        Customer customer = customerService.findOrCreateCustomer(req);
 
         // 1) check availability table: a record must fully cover the requested range
         List<Availability> covering = availabilityRepo.findCoveringAvailability(cottage.getId(), req.startDate, req.endDate);
@@ -59,7 +61,7 @@ public class BookingService {
             throw new ApiException("Cottage already booked for the selected dates");
         }
 
-        Booking booking = new Booking(cottage, customer, req.startDate, req.endDate);
+        Booking booking = new Booking(cottage, customer, req.startDate, req.endDate, req.guests);
         return bookingRepo.save(booking);
     }
 }

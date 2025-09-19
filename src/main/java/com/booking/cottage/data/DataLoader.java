@@ -53,7 +53,7 @@ public class DataLoader implements CommandLineRunner {
         Cottage c6 = cottageRepository.save(new Cottage("Luxury Lake House", "Lake of Bays, Ontario", 349.0, (short) 4, (short) 3, List.of("cot6.avif"), 4.2f, 450, (short) 7));
 
         Cottage c7 = cottageRepository.save(new Cottage("Riverside Retreat", "Gatineau, Quebec", 159.0, (short) 2, (short) 1, List.of("cot7.avif"), 4.9f, 105, (short) 2));
-        Cottage c8 = cottageRepository.save(new Cottage("Mountain A-Frame", "Canmore, Alberta", 229.0, (short) 3, (short) 2, List.of("cot8.avif"), 4.3f, 115, (short) 3));
+        Cottage c8 = cottageRepository.save(new Cottage("Mountain A-Frame", "Canmore, Alberta", 229.0, (short) 3, (short) 2, List.of("cot8.avif", "cot7.avif"), 4.3f, 115, (short) 3));
         Cottage c9 = cottageRepository.save(new Cottage("Countryside Cottage", "Prince Edward County, Ontario", 139.0, (short) 2, (short) 1, List.of("cot9.avif"), 4.5f, 109, (short) 1));
 
         // availability ranges (inclusive)

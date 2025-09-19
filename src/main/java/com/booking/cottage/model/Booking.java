@@ -21,6 +21,7 @@ public class Booking {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private short guests;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cottage_id")
@@ -30,11 +31,12 @@ public class Booking {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    public Booking(Cottage cottage, Customer customer, LocalDate startDate, LocalDate endDate) {
+    public Booking(Cottage cottage, Customer customer, LocalDate startDate, LocalDate endDate, short guests) {
         this.cottage = cottage;
         this.customer = customer;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.guests = guests;
     }
 }
 
