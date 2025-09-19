@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.booking.cottage.repository.BookingRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,7 +21,6 @@ public class BookingService {
 
     private final BookingRepository bookingRepo;
     private final CottageRepository cottageRepo;
-    private final CustomerRepository customerRepo;
     private final AvailabilityRepository availabilityRepo;
     private final CustomerService customerService;
 
@@ -31,7 +31,6 @@ public class BookingService {
                           CustomerService customerService) {
         this.bookingRepo = bookingRepo;
         this.cottageRepo = cottageRepo;
-        this.customerRepo = customerRepo;
         this.availabilityRepo = availabilityRepo;
         this.customerService = customerService;
     }
@@ -62,7 +61,59 @@ public class BookingService {
         }
 
         Booking booking = new Booking(cottage, customer, req.startDate, req.endDate, req.guests);
-        return bookingRepo.save(booking);
+        Booking savedBooking = bookingRepo.save(booking);
+
+        // 3) Update availability records
+        updateAvailabilityForBooking(cottage.getId(), req.startDate, req.endDate, covering);
+
+        return  savedBooking;
+    }
+
+    private void updateAvailabilityForBooking(Long cottageId, LocalDate startDate, LocalDate endDate,
+                                              List<Availability> coveringAvailabilities) {
+        for (Availability availability : coveringAvailabilities) {
+            // Case 1: Booking exactly matches availability period
+            if (availability.getAvailableStart().equals(startDate) && availability.getAvailableEnd().equals(endDate)) {
+                availabilityRepo.delete(availability); // Remove the entire availability
+            }
+            // Case 2: Booking starts at availability start but ends earlier
+            else if (availability.getAvailableStart().equals(startDate) && endDate.isBefore(availability.getAvailableEnd())) {
+                // Create new availability for the remaining period
+                Availability newAvailability = new Availability();
+                newAvailability.getCottage().setId(cottageId);
+                newAvailability.setAvailableStart(endDate.plusDays(1));
+                newAvailability.setAvailableEnd(availability.getAvailableEnd());
+                availabilityRepo.save(newAvailability);
+
+                availabilityRepo.delete(availability); // Remove the original availability
+            }
+            // Case 3: Booking ends at availability end but starts later
+            else if (availability.getAvailableEnd().equals(endDate) && startDate.isAfter(availability.getAvailableStart())) {
+                // Update current availability to end before booking starts
+                availability.setAvailableEnd(startDate.minusDays(1));
+                availabilityRepo.save(availability);
+            }
+            // Case 4: Booking is in the middle of availability period
+            else if (startDate.isAfter(availability.getAvailableStart()) && endDate.isBefore(availability.getAvailableEnd())) {
+                // Split into two availability periods
+
+                // First part: before booking
+                Availability firstPart = new Availability();
+                firstPart.getCottage().setId(cottageId);
+                firstPart.setAvailableStart(availability.getAvailableStart());
+                firstPart.setAvailableEnd(startDate.minusDays(1));
+                availabilityRepo.save(firstPart);
+
+                // Second part: after booking
+                Availability secondPart = new Availability();
+                secondPart.getCottage().setId(cottageId);
+                secondPart.setAvailableStart(endDate.plusDays(1));
+                secondPart.setAvailableEnd(availability.getAvailableEnd());
+                availabilityRepo.save(secondPart);
+
+                availabilityRepo.delete(availability); // Remove the original availability
+            }
+        }
     }
 }
 

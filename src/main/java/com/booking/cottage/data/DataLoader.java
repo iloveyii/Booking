@@ -59,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
         // availability ranges (inclusive)
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,1), LocalDate.of(2025,9,30), c1));
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,5), LocalDate.of(2025,9,25), c2));
-        availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,10), LocalDate.of(2025,9,20), c3));
+        availabilityRepository.save(new Availability(null, LocalDate.of(2025,9,10), LocalDate.of(2025,9,30), c3));
 
         Customer customer1 = new Customer(null,"Alice", "alice@example.com", "123456789");
         Customer customer2 = new Customer(null, "Bob", "bob@example.com", "987654321");

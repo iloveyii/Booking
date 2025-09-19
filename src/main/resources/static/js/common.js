@@ -20,12 +20,15 @@ async function makeApiRequest(httpMethod, endPoint, data = {}, prefix = true, se
         headers: headers,
         body: httpMethod === 'GET' || httpMethod == 'DELETE' || httpMethod == 'HEAD' ? null : JSON.stringify(data)
     })
-    .then(response => {
+    .then(async(response) => {
         // Check if response is successful (status code 200-299)
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+            console.log(response);
+            // return Error(`HTTP error! status: ${response.status}`);
+            const data = await response.text()
+            console.log(data);
+            return data;
         }
-
         if(response) {
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.includes("application/json"))
@@ -40,8 +43,7 @@ async function makeApiRequest(httpMethod, endPoint, data = {}, prefix = true, se
         return items;
     })
     .catch(error => {
-        console.error('Error fetching products:', error);
-        window.location.href = "/auth/login";
+        console.error('Error:', error);
     });
 }
 
