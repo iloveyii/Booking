@@ -1,6 +1,7 @@
 package com.booking.cottage.repository;
 
 import com.booking.cottage.model.Availability;
+import com.booking.cottage.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,6 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
                                                 @Param("startDate") LocalDate startDate,
                                                 @Param("endDate") LocalDate endDate);
 
-    List<Availability> findByCottageId(Long cottageId); // Same as findAllByCottageId
-
+    List<Availability> findByCottageId(Long cottageId);
+    List<Availability> findByAvailableStartBetween(LocalDate availableStart, LocalDate availableEnd);
 }

@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import com.booking.cottage.service.BookingService;
 import com.booking.cottage.repository.BookingRepository;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
@@ -28,6 +32,17 @@ public class BookingController {
     public ResponseEntity<?> create(@RequestBody BookingRequest req) {
         Booking saved = bookingService.createBooking(req);
         return ResponseEntity.status(201).body(saved);
+    }
+
+    @GetMapping("/calendar/{year}/{month}")
+    public Map<LocalDate, Map<String, Long>> getMonthlyOverview(
+            @PathVariable int year,
+            @PathVariable int month) {
+
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+        return bookingService.getMonthlyOverview(startDate, endDate);
     }
 }
 

@@ -14,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.booking.cottage.repository.BookingRepository;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookingService {
@@ -96,6 +99,36 @@ public class BookingService {
                 availabilityRepo.save(afterBooking);
             }
         }
+    }
+
+    public Map<LocalDate, Map<String, Long>> getMonthlyOverview(LocalDate startDate, LocalDate endDate) {
+
+        // Pre-fill map with all days of the month
+        Map<LocalDate, Map<String, Long>> overview = new LinkedHashMap<>();
+        LocalDate current = startDate;
+        while (!current.isAfter(endDate)) {
+            Map<String, Long> counts = new HashMap<>();
+            counts.put("bookings", 0L);
+            counts.put("availabilities", 0L);
+            overview.put(current, counts);
+            current = current.plusDays(1);
+        }
+
+        // Count bookings
+        List<Booking> bookings = bookingRepo.findByStartDateBetween(startDate, endDate);
+        bookings.forEach(booking -> {
+            LocalDate date = booking.getStartDate(); // getDate ?
+            overview.get(date).merge("bookings", 1L, Long::sum);
+        });
+
+        // Count availabilities
+        List<Availability> availabilities = availabilityRepo.findByAvailableStartBetween(startDate, endDate);
+        availabilities.forEach(av -> {
+            LocalDate date = av.getAvailableStart();
+            overview.get(date).merge("availabilities", 1L, Long::sum);
+        });
+
+        return overview;
     }
 }
 
