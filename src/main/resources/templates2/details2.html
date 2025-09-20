@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon" sizes="any">
+  <title>Cottage Booking - Details</title>
+  <!-- Bootstrap 5.4 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #e74c3c;
+        --light: #ecf0f1;
+        --dark: #2c3e50;
+        --success: #2ecc71;
+        --warning: #f39c12;
+    }
+
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-bottom: 50px;
+    }
+
+    .navbar {
+        background-color: var(--primary);
+    }
+
+    .navbar-brand {
+        font-weight: 600;
+    }
+
+    .cottage-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 30px;
+    }
+
+    .cottage-image {
+        height: 300px;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .booking-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        position: sticky;
+        top: 20px;
+    }
+
+    .price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .feature-list li {
+        margin-bottom: 10px;
+        padding-left: 30px;
+        position: relative;
+    }
+
+    .feature-list li:before {
+        content: "✓";
+        color: var(--success);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+    }
+
+    .btn-book {
+        background-color: var(--secondary);
+        color: white;
+        font-weight: 600;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    .btn-book:hover {
+        background-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .section-title {
+        border-bottom: 2px solid var(--light);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .availability-calendar {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .calendar-legend {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+    }
+
+    .available-date {
+        background-color: rgba(46, 204, 113, 0.2);
+    }
+
+    .unavailable-date {
+        background-color: rgba(231, 76, 60, 0.2);
+        color: #999;
+        text-decoration: line-through;
+    }
+
+    .date-input-container {
+        position: relative;
+    }
+
+    .date-input-container i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+
+    .date-input-container input {
+        padding-left: 45px;
+    }
+
+    .flatpickr-day.disabled, .flatpickr-day.disabled:hover {
+        color: #ccc;
+        background-color: #f8f9fa;
+        text-decoration: line-through;
+        cursor: not-allowed;
+    }
+
+    .flatpickr-day.available {
+        background-color: rgba(46, 204, 113, 0.1);
+        border-color: rgba(46, 204, 113, 0.5);
+    }
+
+    .flatpickr-day.selected {
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
+
+    @media (max-width: 768px) {
+        .booking-card {
+            position: static;
+            margin-top: 30px;
+        }
+    }
+  </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-dark navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/"><i class="fas fa-home me-2"></i>Cottage Retreat</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Cottages</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Book Now</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Cottage Header -->
+<div class="cottage-header text-center">
+  <div class="container">
+    <h1 class="display-4">Seaside Villa</h1>
+    <p class="lead">Luxury beachfront cottage with panoramic ocean views</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Image Gallery -->
+      <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+          <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" class="cottage-image" alt="Cottage Exterior">
+        </div>
+        <div class="col-md-6 mb-3">
+          <img src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" class="cottage-image" alt="Cottage Interior">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="section-title">Description</h3>
+          <p>Experience the ultimate beach getaway in our luxurious Seaside Villa. This stunning cottage features panoramic ocean views, a private beach area, and all the modern amenities you need for a comfortable stay.</p>
+          <p>The villa includes two spacious bedrooms, two bathrooms, a fully equipped kitchen, and a large living area with floor-to-ceiling windows. Step outside to your private terrace with comfortable seating and a dining area, perfect for enjoying meals with the sound of the waves in the background.</p>
+        </div>
+      </div>
+
+      <!-- Amenities -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="section-title">Amenities</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="feature-list">
+                <li>Ocean View</li>
+                <li>Private Beach Access</li>
+                <li>Fully Equipped Kitchen</li>
+                <li>Air Conditioning</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="feature-list">
+                <li>Free WiFi</li>
+                <li>Smart TV</li>
+                <li>Outdoor Dining Area</li>
+                <li>Parking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Availability Calendar -->
+      <div class="availability-calendar">
+        <h3 class="section-title">Availability Calendar</h3>
+        <div class="calendar-legend">
+          <div class="legend-item">
+            <div class="legend-color available-date"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color unavailable-date"></div>
+            <span>Booked</span>
+          </div>
+        </div>
+        <div id="availability-calendar" class="mb-4"></div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="booking-card">
+        <h3 class="section-title">Book Your Stay</h3>
+        <div class="mb-3">
+          <span class="price">$249</span>
+          <span class="text-muted">/ night</span>
+        </div>
+
+        <form id="bookingForm">
+          <div class="mb-3 date-input-container">
+            <i class="fas fa-calendar-alt"></i>
+            <input type="text" class="form-control" id="checkInDate" placeholder="Check-in Date" readonly>
+          </div>
+
+          <div class="mb-3 date-input-container">
+            <i class="fas fa-calendar-alt"></i>
+            <input type="text" class="form-control" id="checkOutDate" placeholder="Check-out Date" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="guests" class="form-label">Number of Guests</label>
+            <select class="form-select" id="guests">
+              <option value="1">1 Guest</option>
+              <option value="2" selected>2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="5">5 Guests</option>
+              <option value="6">6 Guests</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="specialRequests" class="form-label">Special Requests</label>
+            <textarea class="form-control" id="specialRequests" rows="3" placeholder="Any special requests?"></textarea>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-book">Book Now</button>
+          </div>
+        </form>
+
+        <div class="mt-4">
+          <h5>What's included?</h5>
+          <ul class="feature-list">
+            <li>Free parking</li>
+            <li>Beach accessories</li>
+            <li>Welcome drink</li>
+            <li>Daily cleaning</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap & Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/js/calendar.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Sample availability data (in a real app, this would come from a server)
+    const availableDates = [
+        '2025-09-15', '2025-09-16', '2025-09-17', '2025-09-18',
+        '2025-09-22', '2025-09-23', '2025-09-24', '2025-09-25',
+        '2025-09-29', '2025-09-30', '2025-09-31', '2025-10-01',
+        '2025-10-05', '2025-10-06', '2025-10-07', '2025-10-08',
+        '2025-10-12', '2025-10-13', '2025-10-14', '2025-10-15'
+    ];
+    getCalendar(availableDates, '#checkInDate', '#checkOutDate');
+  });
+</script>
+</body>
+</html>

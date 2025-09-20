@@ -1,0 +1,121 @@
+<div th:fragment="editbookingmodal" class="modal fade show" id="bookingModal" tabindex="-1" aria-modal="true" role="dialog" style="display: block; padding-left: 0px;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Edit Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <input type="hidden" id="bookingId" value="1">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-card mb-3">
+                                <h6 class="fw-bold mb-3">Basic Information</h6>
+                                <div class="mb-3">
+                                    <label for="customerName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="customerName" required="">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input class="form-control" id="email" required="">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="guests" class="form-label">Guests</label>
+                                        <select class="form-select" id="guests">
+                                            <option value="1">1 Guest</option>
+                                            <option value="2">2 Guests</option>
+                                            <option value="3">3 Guests</option>
+                                            <option value="4">4 Guests</option>
+                                            <option value="5">5 Guests</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="bookingStatus" class="form-label">Status</label>
+                                        <select class="form-select" id="bookingStatus">
+                                            <option value="1">Booked</option>
+                                            <option value="2">Confirmed</option>
+                                            <option value="3">CheckedIn</option>
+                                            <option value="4">Active</option>
+                                            <option value="5">CheckedOut</option>
+                                            <option value="6">Ready</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="bookingPrice" class="form-label">Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="bookingPrice" step="0.01" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="active" class="form-label">&nbsp;</label>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="active" checked="">
+                                            <label class="form-check-label" for="active">Active booking</label>
+                                        </div>
+                                    </div>
+                                </div>
+0                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-card mb-3">
+                                <h6 class="fw-bold mb-3">Images</h6>
+                                <div class="multiple-image-upload-container">
+                                    <div class="upload-area p-4 text-center border rounded" id="dropZone">
+                                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                        <p class="mb-2">Drag & drop images here or click to browse</p>
+                                        <small class="text-muted">JPG, PNG or GIF (Max 2MB each)</small>
+                                        <input type="file" id="bookingImages" accept="image/*" multiple style="display: none;">
+                                    </div>
+
+                                    <div class="preview-container mt-3" id="imagePreviewContainer">
+                                        <div class="d-flex flex-wrap gap-2" id="imagePreviews">
+                                            <!-- Preview images will be added here -->
+                                        </div>
+                                    </div>
+
+                                    <div class="form-text mt-2">
+                                        <small>You can upload up to 5 images. First image will be used as the primary booking image.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-card">
+                                <h6 class="fw-bold mb-3">Availability</h6>
+                                <div class="row">
+                                    <div class="mb-3 col-sm-12 col-md-5">
+                                        <label for="fromDate" class="form-label">From</label>
+                                        <input type="text" class="form-control" id="fromDate" readonly>
+                                    </div>
+                                    <div class="mb-3 col-sm-12 col-md-5">
+                                        <label for="toDate" class="form-label">To</label>
+                                        <input type="text" class="form-control" id="toDate" readonly>
+                                    </div>
+                                    <div class="mb-3 col-sm-2 col-md-2">
+                                        <label for="addAvailabilityBtn" class="form-label">&nbsp;</label>
+                                        <button id="addAvailabilityBtn" class="form-control btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-pos-primary" id="saveBookingBtn">Save BBooking</button>
+            </div>
+        </div>
+    </div>
+</div>
+

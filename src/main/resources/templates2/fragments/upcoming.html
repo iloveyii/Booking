@@ -1,0 +1,72 @@
+<div th:fragment="upcoming" class="col-lg-4 mb-4">
+  <div class="card">
+    <div class="card-header bg-white">
+      <h5 class="card-title mb-0">Upcoming Check-ins</h5>
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item px-0">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="mb-0">Johnson Family</h6>
+              <small class="text-muted">Cottage #2 · Today</small>
+            </div>
+            <span class="badge bg-success badge-status">Confirmed</span>
+          </div>
+        </li>
+        <li class="list-group-item px-0">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="mb-0">Smith & Partners</h6>
+              <small class="text-muted">Cottage #4 · Tomorrow</small>
+            </div>
+            <span class="badge bg-success badge-status">Confirmed</span>
+          </div>
+        </li>
+        <li class="list-group-item px-0">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="mb-0">Robert Miller</h6>
+              <small class="text-muted">Cottage #1 · Jul 15</small>
+            </div>
+            <span class="badge bg-warning badge-status">Pending</span>
+          </div>
+        </li>
+        <li class="list-group-item px-0">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="mb-0">Jennifer Wilson</h6>
+              <small class="text-muted">Cottage #3 · Jul 16</small>
+            </div>
+            <span class="badge bg-success badge-status">Confirmed</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Availability Summary -->
+  <div class="card mt-4">
+    <div class="card-header bg-white">
+      <h5 class="card-title mb-0">Availability Summary</h5>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <h6>Total Cottages: <span class="float-end">12</span></h6>
+        <div class="progress" style="height: 10px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar bg-danger" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-1">
+          <small>Available: 8</small>
+          <small>Booked: 4</small>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h6>Next 7 Days</h6>
+        <canvas id="availabilityChart" height="150"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

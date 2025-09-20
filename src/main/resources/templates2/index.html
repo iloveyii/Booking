@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" sizes="any">
+    <title>CozyCottages - Find Your Perfect Getaway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Header Navigation -->
+<header th:replace="~{fragments/navigation :: navigation}"></header>
+
+<!-- Main Content -->
+<main class="container">
+    <!-- Image Slider -->
+    <div th:replace="~{fragments/slider :: slider}" class="slider"></div>
+
+    <!-- Search Bar -->
+    <div th:replace="~{fragments/searchbar :: searchbar}" class="search-bar"></div>
+
+    <!-- Featured Cottages Section -->
+    <section class="section">
+        <div class="section-title">
+            <h2>Featured Cottages</h2>
+            <p>Discover our most popular and highly-rated properties</p>
+        </div>
+        <div class="cottages" id="cottages"></div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script src="/js/common.js?ljlalsdfj"></script>
+<script src="/js/slider.js"></script>
+
+<script>
+    function renderCottages(items) {
+        let cottages = '';
+        items.forEach( item => {
+            const rating = makeRating(item.stars, item.reviews);
+            cottages += `
+                <div class="cottage-card">
+                    <div class="cottage-img">
+                        <img src="/images/${item.images?.[0]}" alt="Forest Cabin">
+                        <div class="price-tag">$${item.pricePerNight}/night</div>
+                    </div>
+                    <div class="cottage-content">
+                        <h3>${item.name}</h3>
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${item.location}</span>
+                        </div>
+                        <div class="features">
+                            <span><i class="fas fa-bed"></i> ${item.bedrooms} bedrooms</span>
+                            <span><i class="fas fa-bath"></i> ${item.baths} bath</span>
+                        </div>
+                        <div class="rating">${rating}</div>
+                        <a href="/details/${item.id}" class="btn">View Details</a>
+                    </div>
+                </div>
+            `}
+        );
+
+        document.getElementById('cottages').innerHTML = cottages;
+    }
+    async function initApp() {
+        const cottages = await makeApiRequest('GET', 'http://localhost:8080/api/cottages', {}, false);
+        console.log(cottages);
+        renderCottages(cottages);
+    }
+    // When DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the slider when DOM is loaded
+        initSlider();
+        // Initialize the app when DOM is loaded
+        initApp();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cottage Booking System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5.3/5.4 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .navbar {
+      margin-bottom: 20px;
+    }
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      text-align: center;
+      background: #343a40;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">🏡 Cottage Booking</a>
+  </div>
+</nav>
+
+<div class="container">
+  <h1 class="mb-4 text-center">Available Cottages</h1>
+  <div id="cottages" class="row g-4"></div>
+
+  <h2 class="mt-5 mb-3 text-center">Bookings</h2>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+    <tr>
+      <th>Booking ID</th>
+      <th>Customer</th>
+      <th>Cottage</th>
+      <th>From</th>
+      <th>To</th>
+    </tr>
+    </thead>
+    <tbody id="bookings"></tbody>
+  </table>
+</div>
+
+<footer>
+  &copy; 2025 Cottage Booking System. All Rights Reserved.
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const API_BASE = "http://localhost:8080/api";
+
+  async function loadCottages() {
+    const res = await fetch(`${API_BASE}/cottages`);
+    const cottages = await res.json();
+    const container = document.getElementById("cottages");
+    container.innerHTML = "";
+
+    cottages.forEach(c => {
+      container.innerHTML += `
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">${c.name}</h5>
+              <p class="card-text">
+                📍 ${c.location}<br>
+                💲 ${c.pricePerNight}/night
+              </p>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  async function loadBookings() {
+    const res = await fetch(`${API_BASE}/bookings`);
+    const bookings = await res.json();
+    const tbody = document.getElementById("bookings");
+    tbody.innerHTML = "";
+
+    bookings.forEach(b => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${b.id}</td>
+          <td>${b.customer?.name || "N/A"}</td>
+          <td>${b.cottage?.name || "N/A"}</td>
+          <td>${b.startDate}</td>
+          <td>${b.endDate}</td>
+        </tr>`;
+    });
+  }
+
+  // Load data when page starts
+  loadCottages();
+  loadBookings();
+</script>
+</body>
+</html>

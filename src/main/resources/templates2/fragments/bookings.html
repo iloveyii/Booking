@@ -1,0 +1,36 @@
+<div th:fragment="bookings" class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Bookings</h5>
+        <button class="btn btn-sm btn-outline-primary">View All</button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Guest</th>
+                    <th>Cottage</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="recentBookings">
+                <tr>
+                    <td>Michael Brown</td>
+                    <td>Seaside Villa</td>
+                    <td>Jul 10, 2023</td>
+                    <td>Jul 15, 2023</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary">View</button>
+                        <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                        <button class="btn btn-sm btn-outline-secondary">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
