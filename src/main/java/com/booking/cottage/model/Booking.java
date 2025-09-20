@@ -22,6 +22,7 @@ public class Booking {
     private LocalDate startDate;
     private LocalDate endDate;
     private short guests;
+    private double pricePerNight;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cottage_id")
@@ -37,6 +38,7 @@ public class Booking {
         this.startDate = startDate;
         this.endDate = endDate;
         this.guests = guests;
+        this.pricePerNight = cottage.getPricePerNight();
     }
 }
 

@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.booking.cottage.repository.BookingRepository;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BookingService {
@@ -69,7 +66,7 @@ public class BookingService {
         // 3) Update availability records
         updateAvailabilityForBooking(cottage, req.startDate, req.endDate, covering);
 
-        return  savedBooking;
+        return savedBooking;
     }
 
     private void updateAvailabilityForBooking(Cottage cottage, LocalDate startDate, LocalDate endDate,
@@ -145,7 +142,38 @@ public class BookingService {
         }
 
         return overview;
+    }
 
+    public Booking updateBooking(Long id, BookingRequest req) {
+        Optional<Booking> booking = bookingRepo.findById(id);
+        if(booking.isPresent()) {
+            Booking _booking = booking.get();
+            Customer customer = _booking.getCustomer();
+            _booking.setStartDate(req.getStartDate());
+            _booking.setEndDate(req.getEndDate());
+            _booking.setGuests(req.getGuests());
+            _booking.setPricePerNight(req.getPricePerNight());
+
+            customer.setName(req.getName());
+            customer.setEmail(req.getEmail());
+            _booking.setCustomer(customer);
+
+            return bookingRepo.save(_booking);
+        }
+
+//        Customer customer = customerService.findOrCreateCustomer(req);
+//        return bookingRepo.findById(id)
+//                .map(existing -> {
+//                    // update fields from request
+//                    existing.setStartDate(req.getStartDate());
+//                    existing.setEndDate(req.getEndDate());
+//                    // existing.setStatus(req.getStatus());
+//                    existing.setCustomer(customer);
+//                    existing.setGuests(req.getGuests());
+//                    return bookingRepo.save(existing);
+//                })
+//                .orElse(null); // not found
+        return  null;
     }
 }
 

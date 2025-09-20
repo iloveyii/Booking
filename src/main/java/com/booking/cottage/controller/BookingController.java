@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.booking.cottage.service.BookingService;
@@ -43,12 +44,31 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOne(@PathVariable Long id) {
+        return bookingRepo.findById(id)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Booking with id " + id + " not found")));
+    }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody BookingRequest req) {
         Booking saved = bookingService.createBooking(req);
         return ResponseEntity.status(201).body(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody BookingRequest req) {
+        Booking updated = bookingService.updateBooking(id, req);
+        if (updated == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Booking with id " + id + " not found"));
+        }
+        return ResponseEntity.ok(updated); // 200 OK
+    }
+
+    // Get bookings & avail month wise
     @GetMapping("/calendar/{year}/{month}")
     public Map<Integer, Map<String, Long>> getMonthlyOverview(
             @PathVariable int year,

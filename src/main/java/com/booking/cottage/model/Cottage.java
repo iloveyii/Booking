@@ -25,6 +25,7 @@ public class Cottage {
     private double pricePerNight;
     private short bedrooms;
     private short baths;
+
     @ElementCollection
     @CollectionTable(
             name = "cottage_images",
