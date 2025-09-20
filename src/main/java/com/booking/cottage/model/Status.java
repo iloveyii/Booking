@@ -1,9 +1,11 @@
 package com.booking.cottage.model;
 
 public enum Status {
+    AVAILABLE,
     BOOKED,
     CONFIRMED,
-    AVAILABLE,
+    CHECKEDIN,
     ACTIVE,
-    COMPLETED
+    CHECKEDOUT,
+    READY
 }

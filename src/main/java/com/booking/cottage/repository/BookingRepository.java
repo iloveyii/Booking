@@ -16,4 +16,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByStartDateBetween(LocalDate startDate, LocalDate endDate);
 
     List<Booking> findByStartDateLessThanEqualAndEndDateGreaterThanEqual(LocalDate endOfMonth, LocalDate startOfMonth);
+    List<Booking> findByStartDateGreaterThanEqualOrEndDateGreaterThanEqualOrderByStartDate(
+            LocalDate startDate,
+            LocalDate endDate
+    );
 }
