@@ -35,7 +35,7 @@ public class BookingController {
     }
 
     @GetMapping("/calendar/{year}/{month}")
-    public Map<LocalDate, Map<String, Long>> getMonthlyOverview(
+    public Map<Integer, Map<String, Long>> getMonthlyOverview(
             @PathVariable int year,
             @PathVariable int month) {
 

@@ -101,16 +101,16 @@ public class BookingService {
         }
     }
 
-    public Map<LocalDate, Map<String, Long>> getMonthlyOverview(LocalDate startDate, LocalDate endDate) {
+    public Map<Integer, Map<String, Long>> getMonthlyOverview(LocalDate startDate, LocalDate endDate) {
 
         // Pre-fill map with all days of the month
-        Map<LocalDate, Map<String, Long>> overview = new LinkedHashMap<>();
+        Map<Integer, Map<String, Long>> overview = new LinkedHashMap<>();
         LocalDate current = startDate;
         while (!current.isAfter(endDate)) {
             Map<String, Long> counts = new HashMap<>();
-            counts.put("bookings", 0L);
-            counts.put("availabilities", 0L);
-            overview.put(current, counts);
+            counts.put("booked", 0L);
+            counts.put("available", 0L);
+            overview.put(current.getDayOfMonth(), counts);
             current = current.plusDays(1);
         }
 
@@ -124,7 +124,7 @@ public class BookingService {
 
             LocalDate d = bookingStart;
             while (!d.isAfter(bookingEnd)) {
-                overview.get(d).merge("bookings", 1L, Long::sum);
+                overview.get(d.getDayOfMonth()).merge("booked", 1L, Long::sum);
                 d = d.plusDays(1);
             }
         }
@@ -139,7 +139,7 @@ public class BookingService {
 
             LocalDate d = availStart;
             while (!d.isAfter(availEnd)) {
-                overview.get(d).merge("availabilities", 1L, Long::sum);
+                overview.get(d.getDayOfMonth()).merge("available", 1L, Long::sum);
                 d = d.plusDays(1);
             }
         }
