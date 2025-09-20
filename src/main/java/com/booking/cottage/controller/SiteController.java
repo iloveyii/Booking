@@ -7,14 +7,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class SiteController {
+
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("name", "index page");
         return "index";
     }
+
     @GetMapping("/details/{id}")
     public String details(Model model, @PathVariable Long id) {
         model.addAttribute("name", "details page for id: " + id);
         return "details";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+        model.addAttribute("name", "details page for id: ");
+        return "dashboard2";
     }
 }
