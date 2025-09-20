@@ -28,9 +28,10 @@ public class BookingController {
         this.bookingRepo = bookingRepo;
     }
 
-    @GetMapping
-    public ResponseEntity<?> all() {
-        Pageable pageable = PageRequest.of(0, 5, Sort.by("startDate").ascending());
+    @GetMapping("/{page}/{size}")
+    public ResponseEntity<?> all(@PathVariable int page,
+                                 @PathVariable int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startDate").descending());
         Page<Booking> bookings = bookingRepo.findAll(pageable);
         return ResponseEntity.ok(bookings);
     }

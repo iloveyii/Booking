@@ -22,7 +22,13 @@ public class SiteController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("name", "details page for id: ");
-        return "dashboard2";
+        model.addAttribute("name", "main dashboard");
+        return "dashboard";
+    }
+
+    @GetMapping("/dashboard/bookings")
+    public String bookings(Model model) {
+        model.addAttribute("name", "bookings");
+        return "bookings";
     }
 }
