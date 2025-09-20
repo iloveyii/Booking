@@ -145,7 +145,7 @@
         }
 
         // Form submission handling
-        document.getElementById('savebookingBtn').addEventListener('click', function() {
+        document.getElementById('saveBookingBtn').addEventListener('click', function() {
             // Collect image data for submission
             const imagePreviews = document.querySelectorAll('.image-preview img');
             const imageData = Array.from(imagePreviews).map(img => img.src);
