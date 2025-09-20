@@ -26,4 +26,10 @@ public class Availability {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cottage_id")
     private Cottage cottage;
+
+    public Availability(LocalDate startDate, LocalDate endDate, Cottage cottage) {
+        this.availableStart = startDate;
+        this.availableEnd = endDate;
+        this.cottage = cottage;
+    }
 }

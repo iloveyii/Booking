@@ -147,33 +147,11 @@ public class BookingService {
     public Booking updateBooking(Long id, BookingRequest req) {
         Optional<Booking> booking = bookingRepo.findById(id);
         if(booking.isPresent()) {
-            Booking _booking = booking.get();
-            Customer customer = _booking.getCustomer();
-            _booking.setStartDate(req.getStartDate());
-            _booking.setEndDate(req.getEndDate());
-            _booking.setGuests(req.getGuests());
-            _booking.setPricePerNight(req.getPricePerNight());
-
-            customer.setName(req.getName());
-            customer.setEmail(req.getEmail());
-            _booking.setCustomer(customer);
-
-            return bookingRepo.save(_booking);
+            Availability availability = new Availability(booking.get().getStartDate(), booking.get().getEndDate(), booking.get().getCottage());
+            availabilityRepo.save(availability);
+            bookingRepo.delete(booking.get());
         }
-
-//        Customer customer = customerService.findOrCreateCustomer(req);
-//        return bookingRepo.findById(id)
-//                .map(existing -> {
-//                    // update fields from request
-//                    existing.setStartDate(req.getStartDate());
-//                    existing.setEndDate(req.getEndDate());
-//                    // existing.setStatus(req.getStatus());
-//                    existing.setCustomer(customer);
-//                    existing.setGuests(req.getGuests());
-//                    return bookingRepo.save(existing);
-//                })
-//                .orElse(null); // not found
-        return  null;
+        return createBooking(req);
     }
 }
 
