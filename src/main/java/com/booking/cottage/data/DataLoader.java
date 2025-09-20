@@ -57,7 +57,7 @@ public class DataLoader implements CommandLineRunner {
         Cottage c9 = cottageRepository.save(new Cottage("Countryside Cottage", "Prince Edward County, Ontario", 139.0, (short) 2, (short) 1, List.of("cot9.avif"), 4.5f, 109, (short) 1));
 
         // availability ranges (inclusive)
-        availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,2), LocalDate.of(2025,10,30), c1));
+        availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,9), LocalDate.of(2025,10,30), c1));
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,5), LocalDate.of(2025,10,25), c2));
         availabilityRepository.save(new Availability(null, LocalDate.of(2025,10,10), LocalDate.of(2025,10,30), c3));
 
@@ -67,14 +67,14 @@ public class DataLoader implements CommandLineRunner {
         customerRepository.save(customer2);
 
         // Add one booking for Alice
-        bookingRepository.save(
-            Booking.builder()
-                .cottage(c1)
-                .customer(customer1)
-                .startDate(LocalDate.of(2025, 10, 5))
-                .endDate(LocalDate.of(2025, 10, 8))
-                .build()
-        );
+//        bookingRepository.save(
+//            Booking.builder()
+//                .cottage(c1)
+//                .customer(customer1)
+//                .startDate(LocalDate.of(2025, 10, 5))
+//                .endDate(LocalDate.of(2025, 10, 8))
+//                .build()
+//        );
     }
 }
 

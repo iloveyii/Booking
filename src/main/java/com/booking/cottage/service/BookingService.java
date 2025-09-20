@@ -144,6 +144,7 @@ public class BookingService {
         return overview;
     }
 
+    @Transactional
     public Booking updateBooking(Long id, BookingRequest req) {
         Optional<Booking> booking = bookingRepo.findById(id);
         if(booking.isPresent()) {
@@ -151,7 +152,11 @@ public class BookingService {
             availabilityRepo.save(availability);
             bookingRepo.delete(booking.get());
         }
-        return createBooking(req);
+        Booking newBooking = createBooking(req);
+        newBooking.setPricePerNight(req.getPricePerNight());
+        newBooking.getCustomer().setName(req.getName());
+        bookingRepo.save(newBooking);
+        return newBooking;
     }
 }
 
