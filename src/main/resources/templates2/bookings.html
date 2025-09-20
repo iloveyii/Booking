@@ -123,7 +123,9 @@
 <script src="/js/calendar.js?98768776"></script>
 
 <script>
-
+    // Current booking Id
+    let currentBookingId = 0;
+    let bookingModal = null;
     // Global variables to track current pagination state
     let currentPage = 0;
     let currentPageSize = 3;
@@ -156,12 +158,6 @@
         currentPageSize = size;
         currentSortBy = sortBy;
         currentSortDir = sortDir;
-        console.log( 'pagination:', {
-            currentPage,
-            currentPageSize,
-            currentSortBy,
-            currentSortDir
-        });
         const pageOrders = await makeApiRequest('GET', 'http://localhost:8080/api/bookings', {page: page, size:size}, false);
         orders = pageOrders.content;
         console.log('orders', pageOrders);
@@ -181,15 +177,20 @@
                 <td>${b.endDate}</td>
                 <td><span class="badge bg-success">Completed</span></td>
                 <td>
-                    <button class="btn btn-sm btn-outline-secondary">View</button>
-                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
-                    <button class="btn btn-sm btn-outline-secondary">Delete</button>
+                    <button class="edit-booking btn btn-sm btn-outline-secondary" data-id="${b.id}">
+                        <i class="fas fa-edit"></i>
+                        Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-trash-alt"></i>
+                        Delete
+                    </button>
                 </td>
             `;
             tbody.appendChild(row);
         });
         renderPaginationControlsInCommon(pageInfo, tbody, 'ordersPagination', (page, currentPageSize, currentSortBy, currentSortDir)=>fetchOrders(page, currentPageSize, currentSortBy, currentSortDir));
-        // addEventListenerForOrderRowsActions();
+        addEventListenersForRowsButtons();
     }
 
     function formatDate(dateString) {
@@ -197,84 +198,81 @@
         return new Date(dateString).toLocaleDateString(undefined, options);
     }
 
-    async function initAvailability() {
+    async function fillForm(booking) {
         console.log('initAvailability');
         // Initialize date pickers
-        const availableDates = await makeApiRequest('GET', 'http://localhost:8080/api/availabilities/1', {}, false);
-        console.log(availableDates);
+        const availableDates = await makeApiRequest('GET', 'http://localhost:8080/api/availabilities/' + booking.cottage.id, {}, false);
         getCalendar(availableDates, '#fromDate', '#toDate');
 
-        // Add availability functionality
-        const addButton = document.getElementById('addAvailabilityBtn');
-        const fromDateInput = document.getElementById('fromDate');
-        const toDateInput = document.getElementById('toDate');
-        const availabilityTable = document.getElementById('availabilityTable');
-        const noAvailabilityRow = document.getElementById('noAvailabilityRow');
-        addButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            const fromDate = fromDateInput.value;
-            const toDate = toDateInput.value;
-
-            // Validate inputs
-            if (!fromDate || !toDate) {
-                alert('Please select both start and end dates.');
-                return;
-            }
-
-            if (fromDate > toDate) {
-                alert('End date must be after start date.');
-                return;
-            }
-
-            // Remove the no availability row if it exists
-            if (noAvailabilityRow) {
-                noAvailabilityRow.remove();
-            }
-
-            // Create a new row for the availability table
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${formatDate(fromDate)}</td>
-                <td>${formatDate(toDate)}</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-danger remove-btn">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
-
-            // Add event listener to the remove button
-            newRow.querySelector('.remove-btn').addEventListener('click', function() {
-                newRow.remove();
-                // If no rows left, show the no availability message
-                if (availabilityTable.querySelectorAll('tbody tr').length === 0) {
-                    availabilityTable.querySelector('tbody').innerHTML = `
-                        <tr id="noAvailabilityRow">
-                            <td colspan="3" class="text-center text-muted py-4">No availability periods added yet</td>
-                        </tr>
-                    `;
-                }
-            });
-
-            // Add the new row to the table
-            availabilityTable.querySelector('tbody').appendChild(newRow);
-
-            // Clear the input fields
-            fromDateInput.value = '';
-            toDateInput.value = '';
-        });
-
+        document.getElementById('customerName').value = booking.customer.name;
+        document.getElementById('customerEmail').value = booking.customer.email;
+        document.getElementById('guests').value = booking.guests;
+        document.getElementById('fromDate').value = booking.startDate;
+        document.getElementById('toDate').value = booking.endDate;
+        document.getElementById('pricePerNight').value = booking.pricePerNight;
+        document.getElementById('status').value = 1;
     }
 
-    function initDashboard() {
-        fetchOrders();
+    function addEventListenersForModal() {
+        document.getElementById('saveBookingBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('customerName').value;
+            const email = document.getElementById('customerEmail').value;
+            const guests = document.getElementById('guests').value;
+            const startDate = document.getElementById('fromDate').value;
+            const endDate = document.getElementById('toDate').value;
+            const pricePerNight = document.getElementById('pricePerNight').value;
+            const status = document.getElementById('status').value;
+            console.log({customerName, customerEmail, guests, fromDate, toDate, pricePerNight, status});
+
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Save Booking';
+            this.disabled = true;
+            const newBooking = await makeApiRequest('PUT', 'http://localhost:8080/api/bookings/' + currentBookingId, {
+                startDate,
+                endDate,
+                guests,
+                email,
+                name,
+                pricePerNight,
+                cottageId: 3,
+
+            }, false);
+            setTimeout(() => { this.innerHTML = '<i class="fas fa-save-alt"></i> Save Booking'; this.disabled = false; bookingModal.hide(); }, 3000);
+            currentBookingId = newBooking.id;
+            await fetchOrders(); // fetch & render
+            addEventListenersForRowsButtons();
+            console.log(newBooking);
+        });
+    }
+
+    function addEventListenersForRowsButtons() {
+        document.querySelectorAll('.edit-booking').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const bookingId = parseInt(this.getAttribute('data-id'));
+                currentBookingId = bookingId;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Edit';
+                showBookingEditModal(bookingId);
+                setTimeout(() => this.innerHTML = '<i class="fas fa-edit"></i> Edit', 3000);
+            });
+        });
+    }
+
+    async function showBookingEditModal(bookingId) {
+        const booking = await makeApiRequest('GET', 'http://localhost:8080/api/bookings/' + bookingId, {}, false);
+        bookingModal.show();
+        fillForm(booking);
+    }
+
+    async function initDashboard() {
+        await fetchOrders(); // fetch & render
+        addEventListenersForRowsButtons();
+        addEventListenersForModal();
+        bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
     }
 
     // Calendar functionality
     document.addEventListener('DOMContentLoaded', async function() {
         initDashboard();
-        initEditBooking();
-        initAvailability();
     });
 </script>
 </body>
