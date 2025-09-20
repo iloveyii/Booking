@@ -150,8 +150,11 @@ public class BookingService {
         if(booking.isPresent()) {
             Availability availability = new Availability(booking.get().getStartDate(), booking.get().getEndDate(), booking.get().getCottage());
             availabilityRepo.save(availability);
+            req.cottageId = booking.get().getCottage().getId();
             bookingRepo.delete(booking.get());
+            bookingRepo.flush();
         }
+
         Booking newBooking = createBooking(req);
         newBooking.setPricePerNight(req.getPricePerNight());
         newBooking.getCustomer().setName(req.getName());
