@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link href="/css/details.css?iiihi8yfas98979" rel="stylesheet">
-    <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/details.css?iiihi8rsfsfewyfas98979" rel="stylesheet">
+    <link href="/css/styles.css?ljsflffasf" rel="stylesheet">
     <link href="/css/booking.css" rel="stylesheet">
 </head>
 <body>
@@ -30,12 +30,12 @@
 <!-- Main Content -->
 <main class="container">
     <!-- Breadcrumb -->
-    <div class="breadcrumb">
+    <div class="breadcrumb mx-1 mx-md-3 mx-lg-1">
         <a href="#">Home</a> > <a href="#">Ontario</a> > <a href="#">Muskoka</a> > Lakeside Paradise
     </div>
 
     <!-- Cottage Details -->
-    <div class="cottage-details">
+    <div class="cottage-details mx-1 mx-md-3 mx-lg-1">
         <div class="cottage-content">
             <!-- Image Gallery -->
             <div class="gallery" th:replace="~{fragments/gallery :: gallery}"></div>
@@ -144,7 +144,7 @@
         const cottageId = window.location.pathname.split("/").pop();
         const resp = await makeApiRequest('POST', '/api/bookings', {cottageId, startDate, endDate, guests, email, specialRequests}, false);
         if(resp && resp.id) {
-            openInfoModal(startDate, endDate, guests, email);
+            openInfoModal(resp.id, startDate, endDate, guests, email);
             refreshCalendarFromBE();
         } else {
             alert(resp);
@@ -153,14 +153,15 @@
         setTimeout(() => {submitBooking.innerHTML = origText; submitBooking.disabled=false;}, 3000);
     }
 
-    function openInfoModal(startDate, endDate, guests, email) {
+    function openInfoModal(bookingId, startDate, endDate, guests, email) {
         const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
         infoModal.show();
         addConfettiParticles('confetti-container');
-        renderModelContent(startDate, endDate, guests, email);
+        renderModelContent(bookingId, startDate, endDate, guests, email);
     }
 
-    function renderModelContent(startDate, endDate, guests, email) {
+    function renderModelContent(bookingId, startDate, endDate, guests, email) {
+        document.getElementById('bookingEmail').innerHTML = `${bookingId}`;
         document.getElementById('bookingDates').innerHTML = `${startDate} - ${endDate}`;
         document.getElementById('bookingGuests').innerHTML = `${guests} Adults`;
         document.getElementById('bookingEmail').innerHTML = `${email}`;
