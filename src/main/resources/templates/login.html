@@ -291,13 +291,9 @@
                 return;
             }
 
-            // In a real application, you would send this data to a server
             console.log('Login attempt:', { email, password, rememberMe });
-
             // Simulate successful login
             doLogin({ email, password, rememberMe });
-
-
         });
 
         // Add focus effects to form inputs
@@ -321,9 +317,8 @@
                 btnSignIn.disabled = false;
                 btnSignIn.innerHTML = origText;
                 // Redirect to dashboard (in a real application)
-                window.location.href = 'dashboard2.html';
+                window.location.href = '/dashboard';
             }, 5000);
-
         }
     });
 </script>

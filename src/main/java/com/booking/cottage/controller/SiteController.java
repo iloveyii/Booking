@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class SiteController {
 
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("name", "index page");
+        return "login";
+    }
+
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("name", "index page");

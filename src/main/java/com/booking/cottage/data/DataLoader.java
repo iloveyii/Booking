@@ -14,16 +14,13 @@ public class DataLoader implements CommandLineRunner {
     private final CottageRepository cottageRepository;
     private final AvailabilityRepository availabilityRepository;
     private final CustomerRepository customerRepository;
-    private final BookingRepository bookingRepository;
 
     public DataLoader(CottageRepository cottageRepository,
                       AvailabilityRepository availabilityRepository,
-                      CustomerRepository customerRepository,
-                      BookingRepository bookingRepository) {
+                      CustomerRepository customerRepository) {
         this.cottageRepository = cottageRepository;
         this.availabilityRepository = availabilityRepository;
         this.customerRepository = customerRepository;
-        this.bookingRepository = bookingRepository;
     }
 
     @Override
