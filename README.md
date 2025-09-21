@@ -11,6 +11,7 @@
 
 - Install `docker ce` on ubuntu while docker desktop on Mac or Windows
 - Run application `docker comppose up`
+- Browse to http://localhost:8383
 
 ## Using mvn
 
