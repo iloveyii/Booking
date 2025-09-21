@@ -47,6 +47,8 @@ public class BookingService {
 
         Cottage cottage = cottageRepository.findById(req.cottageId)
                 .orElseThrow(() -> new ApiException("Cottage not found"));
+        // before new booking
+        mergeAvailabilities(cottage.getId());
         Customer customer = customerService.findOrCreateCustomer(req);
 
         // 1) check availability table: a record must fully cover the requested range
@@ -66,6 +68,7 @@ public class BookingService {
 
         // 3) Update availability records
         updateAvailabilityForBooking(cottage, req.startDate, req.endDate, covering);
+        // after new booking
         mergeAvailabilities(cottage.getId());
         return savedBooking;
     }
@@ -168,14 +171,12 @@ public class BookingService {
             req.cottageId = booking.get().getCottage().getId();
             bookingRepository.delete(booking.get());
             bookingRepository.flush();
-
         }
 
         Booking newBooking = createBooking(req);
         newBooking.setPricePerNight(req.getPricePerNight());
         newBooking.getCustomer().setName(req.getName());
         bookingRepository.save(newBooking);
-        mergeAvailabilities(req.getCottageId());
         return newBooking;
     }
 

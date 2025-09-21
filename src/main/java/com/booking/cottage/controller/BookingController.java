@@ -87,10 +87,10 @@ public class BookingController {
         return bookingService.getMonthlyOverview(startDate, endDate);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> testIt() {
-        List<Availability> availabilities = availabilityRepository.findByCottageId(4L);
-        return ResponseEntity.ok(availabilities);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
+        bookingService.deleteBooking(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Transactional

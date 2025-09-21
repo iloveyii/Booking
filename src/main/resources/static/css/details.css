@@ -599,7 +599,7 @@ footer {
     }
 
     .flatpickr-day.selected {
-        background-color: var(--secondary);
+        background-color: var(--primary);
         border-color: var(--secondary);
     }
 
@@ -618,4 +618,8 @@ footer {
 
 select#guests {
     padding-left: 44px !important;
+}
+
+.flatpickr-day.selected {
+    color: black !important;
 }
