@@ -68,7 +68,7 @@
         document.getElementById('cottages').innerHTML = cottages;
     }
     async function initApp() {
-        const cottages = await makeApiRequest('GET', 'http://localhost:8080/api/cottages', {}, false);
+        const cottages = await makeApiRequest('GET', '/api/cottages', {}, false);
         console.log(cottages);
         renderCottages(cottages);
     }

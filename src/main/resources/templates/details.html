@@ -107,7 +107,7 @@
 
     async function refreshCalendarFromBE() {
         const id = window.location.pathname.split("/").pop();
-        const availableDates = await makeApiRequest('GET', 'http://localhost:8080/api/availabilities/' + id, {}, false);
+        const availableDates = await makeApiRequest('GET', '/api/availabilities/' + id, {}, false);
         console.log(availableDates);
         getCalendar(availableDates, '#checkInDate', '#checkOutDate');
         document.getElementById('checkInDate').value = '';
@@ -116,7 +116,7 @@
 
     async function renderDetails() {
         const id = window.location.pathname.split("/").pop();
-        const cottage = await makeApiRequest('GET', 'http://localhost:8080/api/cottages/' + id, {}, false);
+        const cottage = await makeApiRequest('GET', '/api/cottages/' + id, {}, false);
         console.log(cottage);
         if(cottage) {
             document.title = `${cottage.name} - Cottage Details 🚀`;
@@ -142,7 +142,7 @@
         submitBooking.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Book Now';
         submitBooking.disabled = true;
         const cottageId = window.location.pathname.split("/").pop();
-        const resp = await makeApiRequest('POST', 'http://localhost:8080/api/bookings', {cottageId, startDate, endDate, guests, email, specialRequests}, false);
+        const resp = await makeApiRequest('POST', '/api/bookings', {cottageId, startDate, endDate, guests, email, specialRequests}, false);
         if(resp && resp.id) {
             openInfoModal(startDate, endDate, guests, email);
             refreshCalendarFromBE();

@@ -161,7 +161,7 @@
         currentPageSize = size;
         currentSortBy = sortBy;
         currentSortDir = sortDir;
-        const pageOrders = await makeApiRequest('GET', 'http://localhost:8080/api/bookings', {page: page, size:size}, false);
+        const pageOrders = await makeApiRequest('GET', '/api/bookings', {page: page, size:size}, false);
         orders = pageOrders.content;
         console.log('orders', pageOrders);
         updatePageInfo(pageOrders);
@@ -204,7 +204,7 @@
     async function fillForm(booking) {
         console.log('initAvailability');
         // Initialize date pickers
-        const availableDates = await makeApiRequest('GET', `http://localhost:8080/api/availabilities/${booking.cottage.id}/${booking.id}` , {}, false);
+        const availableDates = await makeApiRequest('GET', `/api/availabilities/${booking.cottage.id}/${booking.id}` , {}, false);
         getCalendar(availableDates, '#fromDate', '#toDate');
 
         document.getElementById('customerName').value = booking.customer.name;
@@ -230,7 +230,7 @@
 
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Save Booking';
             this.disabled = true;
-            const newBooking = await makeApiRequest('PUT', 'http://localhost:8080/api/bookings/' + currentBookingId, {
+            const newBooking = await makeApiRequest('PUT', '/api/bookings/' + currentBookingId, {
                 startDate,
                 endDate,
                 guests,
@@ -249,7 +249,7 @@
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Delete';
         if (confirm('Are you sure you want to delete this booking?')) {
             const bookingId = parseInt(this.getAttribute('data-id'));
-            await makeApiRequest('DELETE', 'http://localhost:8080/api/bookings/' + bookingId, {}, false);
+            await makeApiRequest('DELETE', '/api/bookings/' + bookingId, {}, false);
             const row = this.closest('tr');
             row.remove();
         }
@@ -280,7 +280,7 @@
     }
 
     async function showBookingEditModal(bookingId) {
-        const booking = await makeApiRequest('GET', 'http://localhost:8080/api/bookings/' + bookingId, {}, false);
+        const booking = await makeApiRequest('GET', '/api/bookings/' + bookingId, {}, false);
         bookingModal.show();
         fillForm(booking);
     }

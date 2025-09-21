@@ -62,7 +62,7 @@
     }
 
     async function renderRecentBookings() {
-        const recentBookings = await makeApiRequest('GET', 'http://localhost:8080/api/bookings/recent', {}, false);
+        const recentBookings = await makeApiRequest('GET', '/api/bookings/recent', {}, false);
         console.log(recentBookings);
         const tbody = document.getElementById('recentBookings');
         let rows = '';
@@ -84,7 +84,7 @@
     }
 
     async function refreshCalendarFromBE() {
-        const bookingData = await makeApiRequest('GET', 'http://localhost:8080/api/bookings/calendar/2025/10', {}, false);
+        const bookingData = await makeApiRequest('GET', '/api/bookings/calendar/2025/10', {}, false);
         console.log(bookingData);
         return bookingData;
     }
