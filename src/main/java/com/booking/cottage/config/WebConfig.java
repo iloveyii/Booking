@@ -8,7 +8,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("https://booking.softhem.ne")
+                .allowedOrigins("https://booking.softhem.net")
                 .allowedMethods("*");
     }
 }
