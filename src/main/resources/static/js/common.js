@@ -266,5 +266,5 @@ function showNotification(message, type = 'success') {
     // Hide after 3 seconds
     setTimeout(() => {
         notificationToast.hide();
-    }, 3000);
+    }, 5000);
 }
