@@ -3,7 +3,9 @@ package com.booking.cottage.util;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import com.booking.cottage.model.Availability;
 
 public class Helper {
 
@@ -49,5 +51,35 @@ public class Helper {
 
         return availableDates;
     }
+
+    public static List<Availability> mergeAvailabilities(List<Availability> availabilities) {
+        // 1. Sort by cottage + start date
+        availabilities.sort(Comparator
+                .comparing((Availability a) -> a.getCottage().getId())
+                .thenComparing(Availability::getAvailableStart));
+
+        List<Availability> merged = new ArrayList<>();
+
+        for (Availability current : availabilities) {
+            if (merged.isEmpty()) {
+                merged.add(current);
+            } else {
+                Availability last = merged.get(merged.size() - 1);
+
+                // Same cottage and continuous or overlapping
+                if (last.getCottage().getId().equals(current.getCottage().getId())
+                        && !current.getAvailableStart().isAfter(last.getAvailableEnd().plusDays(1))) {
+                    // Extend the last range
+                    if (current.getAvailableEnd().isAfter(last.getAvailableEnd())) {
+                        last.setAvailableEnd(current.getAvailableEnd());
+                    }
+                } else {
+                    merged.add(current);
+                }
+            }
+        }
+        return merged;
+    }
+
 }
 

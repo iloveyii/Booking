@@ -1,19 +1,24 @@
 package com.booking.cottage.controller;
 
 import com.booking.cottage.dto.BookingRequest;
+import com.booking.cottage.model.Availability;
 import com.booking.cottage.model.Booking;
+import com.booking.cottage.repository.AvailabilityRepository;
+import com.booking.cottage.util.Helper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.booking.cottage.service.BookingService;
 import com.booking.cottage.repository.BookingRepository;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +28,12 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final BookingRepository bookingRepo;
+    private final AvailabilityRepository availabilityRepository;
 
-    public BookingController(BookingService bookingService, BookingRepository bookingRepo) {
+    public BookingController(BookingService bookingService, BookingRepository bookingRepo, AvailabilityRepository availabilityRepository) {
         this.bookingService = bookingService;
         this.bookingRepo = bookingRepo;
+        this.availabilityRepository = availabilityRepository;
     }
 
     @GetMapping("/{page}/{size}")
@@ -78,6 +85,28 @@ public class BookingController {
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.atEndOfMonth();
         return bookingService.getMonthlyOverview(startDate, endDate);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> testIt() {
+        List<Availability> availabilities = availabilityRepository.findByCottageId(4L);
+        return ResponseEntity.ok(availabilities);
+    }
+
+    @Transactional
+    @GetMapping("/merged")
+    public ResponseEntity<?> merged() {
+        Long cottageId = 4L;
+        List<Availability> availabilities = availabilityRepository.findByCottageId(cottageId);
+        List<Availability> merged = Helper.mergeAvailabilities(availabilities);
+        List<Availability> copiedMerged = new ArrayList<>();
+        for(Availability av : merged) {
+            Availability copyAv = new Availability(av.getAvailableStart(), av.getAvailableEnd(), av.getCottage());
+            copiedMerged.add(copyAv);
+        }
+        availabilityRepository.deleteAll(availabilities);
+
+        return ResponseEntity.ok(availabilityRepository.saveAll(copiedMerged));
     }
 }
 

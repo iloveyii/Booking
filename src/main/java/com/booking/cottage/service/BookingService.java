@@ -9,6 +9,7 @@ import com.booking.cottage.model.Customer;
 import com.booking.cottage.repository.AvailabilityRepository;
 import com.booking.cottage.repository.CottageRepository;
 import com.booking.cottage.repository.CustomerRepository;
+import com.booking.cottage.util.Helper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.booking.cottage.repository.BookingRepository;
@@ -19,19 +20,19 @@ import java.util.*;
 @Service
 public class BookingService {
 
-    private final BookingRepository bookingRepo;
-    private final CottageRepository cottageRepo;
-    private final AvailabilityRepository availabilityRepo;
+    private final BookingRepository bookingRepository;
+    private final CottageRepository cottageRepository;
+    private final AvailabilityRepository availabilityRepository;
     private final CustomerService customerService;
 
-    public BookingService(BookingRepository bookingRepo,
-                          CottageRepository cottageRepo,
+    public BookingService(BookingRepository bookingRepository,
+                          CottageRepository cottageRepository,
                           CustomerRepository customerRepo,
-                          AvailabilityRepository availabilityRepo,
+                          AvailabilityRepository availabilityRepository,
                           CustomerService customerService) {
-        this.bookingRepo = bookingRepo;
-        this.cottageRepo = cottageRepo;
-        this.availabilityRepo = availabilityRepo;
+        this.bookingRepository = bookingRepository;
+        this.cottageRepository = cottageRepository;
+        this.availabilityRepository = availabilityRepository;
         this.customerService = customerService;
     }
 
@@ -44,28 +45,28 @@ public class BookingService {
             throw new ApiException("startDate must be before or equal to endDate");
         }
 
-        Cottage cottage = cottageRepo.findById(req.cottageId)
+        Cottage cottage = cottageRepository.findById(req.cottageId)
                 .orElseThrow(() -> new ApiException("Cottage not found"));
         Customer customer = customerService.findOrCreateCustomer(req);
 
         // 1) check availability table: a record must fully cover the requested range
-        List<Availability> covering = availabilityRepo.findCoveringAvailability(cottage.getId(), req.startDate, req.endDate);
+        List<Availability> covering = availabilityRepository.findCoveringAvailability(cottage.getId(), req.startDate, req.endDate);
         if (covering.isEmpty()) {
             throw new ApiException("Cottage not available for the selected dates (no availability entry covers the range)");
         }
 
         // 2) check overlapping bookings
-        List<Booking> overlapping = bookingRepo.findOverlappingBookings(cottage.getId(), req.startDate, req.endDate);
+        List<Booking> overlapping = bookingRepository.findOverlappingBookings(cottage.getId(), req.startDate, req.endDate);
         if (!overlapping.isEmpty()) {
             throw new ApiException("Cottage already booked for the selected dates");
         }
 
         Booking booking = new Booking(cottage, customer, req.startDate, req.endDate, req.guests);
-        Booking savedBooking = bookingRepo.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
 
         // 3) Update availability records
         updateAvailabilityForBooking(cottage, req.startDate, req.endDate, covering);
-
+        mergeAvailabilities(cottage.getId());
         return savedBooking;
     }
 
@@ -76,7 +77,7 @@ public class BookingService {
             LocalDate availEnd = availability.getAvailableEnd();
 
             // Delete the original availability
-            availabilityRepo.delete(availability);
+            availabilityRepository.delete(availability);
 
             // Create availability before booking (if needed)
             if (availStart.isBefore(startDate)) {
@@ -84,7 +85,7 @@ public class BookingService {
                 beforeBooking.setCottage(cottage);
                 beforeBooking.setAvailableStart(availStart);
                 beforeBooking.setAvailableEnd(startDate.minusDays(1));
-                availabilityRepo.save(beforeBooking);
+                availabilityRepository.save(beforeBooking);
             }
 
             // Create availability after booking (if needed)
@@ -93,7 +94,7 @@ public class BookingService {
                 afterBooking.setCottage(cottage);
                 afterBooking.setAvailableStart(endDate.plusDays(1));
                 afterBooking.setAvailableEnd(availEnd);
-                availabilityRepo.save(afterBooking);
+                availabilityRepository.save(afterBooking);
             }
         }
     }
@@ -112,7 +113,7 @@ public class BookingService {
         }
 
         // Bookings: expand each range into days
-        List<Booking> bookings = bookingRepo
+        List<Booking> bookings = bookingRepository
                 .findByStartDateLessThanEqualAndEndDateGreaterThanEqual(endDate, startDate);
 
         for (Booking booking : bookings) {
@@ -127,7 +128,7 @@ public class BookingService {
         }
 
         // Availabilities: expand each range into days
-        List<Availability> availabilities = availabilityRepo
+        List<Availability> availabilities = availabilityRepository
                 .findByAvailableStartLessThanEqualAndAvailableEndGreaterThanEqual(endDate, startDate);
 
         for (Availability av : availabilities) {
@@ -145,21 +146,48 @@ public class BookingService {
     }
 
     @Transactional
+    private void mergeAvailabilities(Long cottageId) {
+        List<Availability> availabilities = availabilityRepository.findByCottageId(cottageId);
+        List<Availability> merged = Helper.mergeAvailabilities(availabilities);
+        List<Availability> copiedMerged = new ArrayList<>();
+        for(Availability av : merged) {
+            Availability copyAv = new Availability(av.getAvailableStart(), av.getAvailableEnd(), av.getCottage());
+            copiedMerged.add(copyAv);
+        }
+        availabilityRepository.deleteAll(availabilities);
+        availabilityRepository.saveAll(copiedMerged);
+    }
+
+    @Transactional
     public Booking updateBooking(Long id, BookingRequest req) {
-        Optional<Booking> booking = bookingRepo.findById(id);
+        Optional<Booking> booking = bookingRepository.findById(id);
         if(booking.isPresent()) {
             Availability availability = new Availability(booking.get().getStartDate(), booking.get().getEndDate(), booking.get().getCottage());
-            availabilityRepo.save(availability);
+            availabilityRepository.save(availability);
+            availabilityRepository.flush();
             req.cottageId = booking.get().getCottage().getId();
-            bookingRepo.delete(booking.get());
-            bookingRepo.flush();
+            bookingRepository.delete(booking.get());
+            bookingRepository.flush();
+
         }
 
         Booking newBooking = createBooking(req);
         newBooking.setPricePerNight(req.getPricePerNight());
         newBooking.getCustomer().setName(req.getName());
-        bookingRepo.save(newBooking);
+        bookingRepository.save(newBooking);
+        mergeAvailabilities(req.getCottageId());
         return newBooking;
+    }
+
+    @Transactional
+    public void deleteBooking(Long id) {
+        Optional<Booking> booking = bookingRepository.findById(id);
+        if(booking.isPresent()) {
+            Availability availability = new Availability(booking.get().getStartDate(), booking.get().getEndDate(), booking.get().getCottage());
+            availabilityRepository.save(availability);
+            availabilityRepository.flush();
+            bookingRepository.delete(booking.get());
+        }
     }
 }
 
