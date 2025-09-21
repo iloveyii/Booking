@@ -12,4 +12,8 @@
 - Install `docker ce` on ubuntu while docker desktop on Mac or Windows
 - Run application `docker comppose up`
 
+## Using mvn
+
+- Run with maven `mvn spring-boot:run`
+- Browse to http://localhost:8080
 
