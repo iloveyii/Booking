@@ -1,0 +1,82 @@
+<div th:fragment="editbookingmodal" class="modal fade show" id="bookingModal" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Edit Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="p-1 p-md-3" id="bookingForm">
+                    <input type="hidden" id="bookingId" value="1">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-card mb-3">
+                                <h6 class="fw-bold mb-3">Customer Information</h6>
+                                <div class="mb-3">
+                                    <label for="customerName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="customerName" required="">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="customerEmail" class="form-label">Email</label>
+                                    <input class="form-control" id="customerEmail" required="">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="guests" class="form-label">Guests</label>
+                                        <select class="form-select" id="guests">
+                                            <option value="1">1 Guest</option>
+                                            <option value="2">2 Guests</option>
+                                            <option value="3">3 Guests</option>
+                                            <option value="4">4 Guests</option>
+                                            <option value="5">5 Guests</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-card mb-3">
+                                <h6 class="fw-bold mb-3">Booking Information</h6>
+                                <div class="mb-3">
+                                    <label for="fromDate" class="form-label">From</label>
+                                    <input type="text" class="form-control" id="fromDate" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="toDate" class="form-label">To</label>
+                                    <input type="text" class="form-control" id="toDate" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="pricePerNight" class="form-label">Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="pricePerNight" step="0.01" required="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status">
+                                        <option value="1">Booked</option>
+                                        <option value="2">Confirmed</option>
+                                        <option value="3">CheckedIn</option>
+                                        <option value="4">Active</option>
+                                        <option value="5">CheckedOut</option>
+                                        <option value="6">Ready</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveBookingBtn">Save Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,62 @@
+<!-- PDF Modal -->
+<div th:fragment="modal" class="modal fade pdf-modal" id="infoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl row d-flex justify-content-center">
+        <div class="modal-content col-12 col-sm-12 col-md-8 col-lg-6">
+            <div class="modal-header">
+                <h5 class="modal-title">Your Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="success" id="message">
+
+                    <div class="success-card-1">
+                        <!-- Animated Success Icon -->
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+
+                        <!-- Main Message -->
+                        <h2 class="fw-bold text-center text-dark mb-3">Booking Confirmed!</h2>
+                        <p class="text-muted mb-4">Your booking has been successfully completed. You'll receive a confirmation email shortly.</p>
+
+                        <!-- Booking Details -->
+                        <div class="booking-details text-start">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Booking ID:</span>
+                                <span class="fw-semibold">#CT789456</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Date:</span>
+                                <span id="bookingDates" class="fw-semibold">Sep 15-18, 2025</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Guests:</span>
+                                <span id="bookingGuests" class="fw-semibold">2 Adults</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Email:</span>
+                                <span id="bookingEmail" class="fw-semibold">use@demo.com</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Confetti Animation -->
+                    <div id="confetti-container"></div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm">
+                    <i class="fas fa-download me-2"></i>Download Receipt
+                </button>
+
+                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

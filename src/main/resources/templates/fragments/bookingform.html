@@ -1,0 +1,55 @@
+<div th:fragment="bookingform" class="booking-form">
+    <div class="booking-card">
+        <h3 class="section-title">Book Your Stay</h3>
+        <div class="mb-3">
+            <span class="price" id="price">$249</span>
+            <span class="text-muted">/ night</span>
+        </div>
+
+        <form id="bookingForm">
+            <div class="mb-3 date-input-container">
+                <i class="fas fa-calendar-alt"></i>
+                <input type="text" class="form-control" id="checkInDate" placeholder="Check-in Date" readonly>
+            </div>
+
+            <div class="mb-3 date-input-container">
+                <i class="fas fa-calendar-alt"></i>
+                <input type="text" class="form-control" id="checkOutDate" placeholder="Check-out Date" readonly>
+            </div>
+
+            <div class="mb-3" >
+                <label for="guests" class="form-label">Number of Guests</label>
+                <div class="date-input-container" id="guests-container">
+                    <i class="far fa-user"></i>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="date-input-container">
+                    <i class="far fa-envelope"></i>
+                    <input type="text" class="form-control" id="email" placeholder="Email...">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="specialRequests" class="form-label">Special Requests</label>
+                <textarea class="form-control" id="specialRequests" rows="3" placeholder="Any special requests?"></textarea>
+            </div>
+
+            <div class="d-grid">
+                <button id="submitBooking" type="submit" class="btn btn-book">Book Now</button>
+            </div>
+        </form>
+
+        <div class="mt-4">
+            <h5>What's included?</h5>
+            <ul class="feature-list">
+                <li>Free parking</li>
+                <li>Beach accessories</li>
+                <li>Welcome drink</li>
+                <li>Daily cleaning</li>
+            </ul>
+        </div>
+    </div>
+</div>
