@@ -201,7 +201,7 @@
     async function fillForm(booking) {
         console.log('initAvailability');
         // Initialize date pickers
-        const availableDates = await makeApiRequest('GET', 'http://localhost:8080/api/availabilities/' + booking.cottage.id, {}, false);
+        const availableDates = await makeApiRequest('GET', `http://localhost:8080/api/availabilities/${booking.cottage.id}/${booking.id}` , {}, false);
         getCalendar(availableDates, '#fromDate', '#toDate');
 
         document.getElementById('customerName').value = booking.customer.name;
