@@ -117,6 +117,7 @@
 </main>
 
 <div th:replace="~{fragments/editbookingmodal :: editbookingmodal}"></div>
+<div th:replace="~{fragments/deletemodal :: deletemodal}"></div>
 
 <!-- Bootstrap & Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -247,12 +248,18 @@
     }
     async function handleDeleteClick() {
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Delete';
-        if (confirm('Are you sure you want to delete this booking?')) {
+        confirmDelete(async () => {
             const bookingId = parseInt(this.getAttribute('data-id'));
             await makeApiRequest('DELETE', '/api/bookings/' + bookingId, {}, false);
             const row = this.closest('tr');
             row.remove();
-        }
+        });
+<!--        if (confirm('Are you sure you want to delete this booking?')) {-->
+<!--            const bookingId = parseInt(this.getAttribute('data-id'));-->
+<!--            await makeApiRequest('DELETE', '/api/bookings/' + bookingId, {}, false);-->
+<!--            const row = this.closest('tr');-->
+<!--            row.remove();-->
+<!--        }-->
         setTimeout(() => this.innerHTML = '<i class="fas fa-trash-alt"></i> Delete', 3000);
     }
     async function handleEditClick() {
@@ -283,6 +290,19 @@
         const booking = await makeApiRequest('GET', '/api/bookings/' + bookingId, {}, false);
         bookingModal.show();
         fillForm(booking);
+    }
+
+    function confirmDelete(cb) {
+        document.getElementById('confirmDeleteBtn').removeEventListener('click', () => {});
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const deleteBtn = document.getElementById('confirmDeleteBtn');
+        deleteBtn.addEventListener('click', () => {
+            cb();
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Delete';
+            setTimeout(()=> { deleteModal.hide();deleteBtn.innerHTML = 'Delete'; deleteBtn.disabled = false;} , 3000);
+        });
+        deleteModal.show();
     }
 
     async function initDashboard() {
