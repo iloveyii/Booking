@@ -1,0 +1,15 @@
+# Booking cottage
+
+- Spring Boot App for booking cottages and show a list of all bookings
+- Built with Java 17, Spring Boot 3.5.5
+
+## Git 
+
+- Clone app `git clone <url>`
+
+## Docker 
+
+- Install `docker ce` on ubuntu while docker desktop on Mac or Windows
+- Run application `docker comppose up`
+
+
