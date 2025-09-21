@@ -1,16 +1,16 @@
-<div th:fragment="sidebar" class="sidebar col-md-3 col-lg-2 d-md-block">
+<div th:fragment="sidebar(currentPage)" class="sidebar col-md-3 col-lg-2 d-md-block">
     <div class="text-left mb-4">
         <h4 class="ps-1 ps-lg-3"><i class="fas fa-home"></i> <span class="d-none d-lg-inline">Booking</span></h4>
     </div>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="/dashboard">
+            <a class="nav-link" th:classappend="${currentPage == 'dashboard'} ? ' active'" href="/dashboard">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/dashboard/bookings">
+            <a class="nav-link" th:classappend="${currentPage == 'bookings'} ? ' active'" href="/dashboard/bookings">
                 <i class="fas fa-calendar"></i>
                 <span>Bookings</span>
             </a>

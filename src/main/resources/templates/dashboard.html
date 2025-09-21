@@ -13,7 +13,7 @@
 </head>
 <body>
 <!-- Sidebar -->
-<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar(currentPage=${currentPage})}"></div>
 
 <!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>

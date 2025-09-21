@@ -88,12 +88,15 @@
         .image-preview:hover .set-primary {
             display: block;
         }
+        .bookings.card:hover {
+            transform: none;
+        }
     </style>
 
 </head>
 <body>
 <!-- Sidebar -->
-<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar(currentPage=${currentPage})}"></div>
 
 <!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -101,8 +104,8 @@
 <!-- Main Content -->
 <main class="main-content">
     <div class="dashboard-header">
-        <h1 class="h2">Summary</h1>
-        <p class="text-muted">Welcome back! Here's what's happening with your cottage bookings today.</p>
+        <h1 class="h2">Booking</h1>
+        <p class="text-muted">Here is a complete list of all bookings.</p>
     </div>
 
     <div class="row">

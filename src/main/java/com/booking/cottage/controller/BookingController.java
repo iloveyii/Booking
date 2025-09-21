@@ -21,6 +21,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -28,12 +29,10 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final BookingRepository bookingRepo;
-    private final AvailabilityRepository availabilityRepository;
 
-    public BookingController(BookingService bookingService, BookingRepository bookingRepo, AvailabilityRepository availabilityRepository) {
+    public BookingController(BookingService bookingService, BookingRepository bookingRepo) {
         this.bookingService = bookingService;
         this.bookingRepo = bookingRepo;
-        this.availabilityRepository = availabilityRepository;
     }
 
     @GetMapping("/{page}/{size}")
@@ -48,7 +47,9 @@ public class BookingController {
     public ResponseEntity<?> top5() {
         LocalDate today = LocalDate.now();
         List<Booking> bookings = bookingRepo.findByStartDateGreaterThanEqualOrEndDateGreaterThanEqualOrderByStartDate(today, today);
-        return ResponseEntity.ok(bookings);
+        return ResponseEntity.ok(bookings.stream()
+                .limit(5)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
