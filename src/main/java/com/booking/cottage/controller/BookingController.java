@@ -92,21 +92,5 @@ public class BookingController {
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }
-
-    @Transactional
-    @GetMapping("/merged")
-    public ResponseEntity<?> merged() {
-        Long cottageId = 4L;
-        List<Availability> availabilities = availabilityRepository.findByCottageId(cottageId);
-        List<Availability> merged = Helper.mergeAvailabilities(availabilities);
-        List<Availability> copiedMerged = new ArrayList<>();
-        for(Availability av : merged) {
-            Availability copyAv = new Availability(av.getAvailableStart(), av.getAvailableEnd(), av.getCottage());
-            copiedMerged.add(copyAv);
-        }
-        availabilityRepository.deleteAll(availabilities);
-
-        return ResponseEntity.ok(availabilityRepository.saveAll(copiedMerged));
-    }
 }
 
