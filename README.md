@@ -5,12 +5,12 @@
 
 ## Git 
 
-- Clone app `git clone <url>`
+- Clone app `git clone https://github.com/iloveyii/Booking`
 
 ## Docker 
 
 - Install `docker ce` on ubuntu while docker desktop on Mac or Windows
-- Run application `docker comppose up`
+- Run application `docker compose up`
 - Browse to http://localhost:8383
 
 ## Using mvn
